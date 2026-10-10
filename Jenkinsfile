@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -50,11 +49,11 @@ pipeline {
                 sh '''
                     set -eu
 
-                    test -f target/mandali-consultancy-1.0.0.jar
+                    JAR="$WORKSPACE/target/mandali-consultancy-1.0.0.jar"
+                    test -f "$JAR"
 
                     sudo /usr/bin/install -o jenkins -g jenkins -m 644 \
-                        target/mandali-consultancy-1.0.0.jar \
-                        /opt/mandali-app/app.jar
+                        "$JAR" /opt/mandali-app/app.jar
 
                     sudo /usr/bin/systemctl restart mandali-app
 
@@ -69,8 +68,7 @@ pipeline {
                     echo "Deployment health check failed."
                     sudo /usr/bin/systemctl status mandali-app --no-pager || true
                     exit 1
-                
-
+                '''
             }
         }
     }
