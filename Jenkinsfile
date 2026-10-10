@@ -1,20 +1,23 @@
+```groovy
 pipeline {
     agent any
 
     environment {
         JAVA_HOME = '/usr/lib/jvm/java-21-amazon-corretto.x86_64'
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        PATH = "/usr/lib/jvm/java-21-amazon-corretto.x86_64/bin:${env.PATH}"
     }
-
-    stages {
-pipeline {
-    agent any
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-                echo 'Source code checked out successfully.'
+            }
+        }
+
+        stage('Check Java and Maven') {
+            steps {
+                sh 'java -version'
+                sh 'mvn -version'
             }
         }
 
@@ -38,8 +41,7 @@ pipeline {
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar',
-                                 fingerprint: true
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
@@ -50,7 +52,7 @@ pipeline {
         }
 
         failure {
-            echo 'Pipeline failed. Check Console Output.'
+            echo 'Mandali Consultancy pipeline failed. Check the console output.'
         }
 
         always {
@@ -58,4 +60,4 @@ pipeline {
         }
     }
 }
-
+```
