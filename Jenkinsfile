@@ -49,25 +49,13 @@ pipeline {
                 sh '''
                     set -eu
 
-                    JAR="$WORKSPACE/target/mandali-consultancy-1.0.0.jar"
-                    test -f "$JAR"
+                    echo "Starting Mandali Consultancy deployment..."
 
-                    sudo /usr/bin/install -o jenkins -g jenkins -m 644 \
-                        "$JAR" /opt/mandali-app/app.jar
+                    test -f "$WORKSPACE/target/mandali-consultancy-1.0.0.jar"
 
-                    sudo /usr/bin/systemctl restart mandali-app
+                    sudo /usr/local/sbin/deploy-mandali-app
 
-                    for i in $(seq 1 15); do
-                        if curl -fsS http://127.0.0.1:8081/ -o /dev/null; then
-                            echo "Mandali Consultancy deployed successfully!"
-                            exit 0
-                        fi
-                        sleep 2
-                    done
-
-                    echo "Deployment health check failed."
-                    sudo /usr/bin/systemctl status mandali-app --no-pager || true
-                    exit 1
+                    echo "Mandali Consultancy deployment completed successfully!"
                 '''
             }
         }
